@@ -17,8 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from core import views
+from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.inicio, name="home"),
+    path('iniciar_sesion/', views.iniciar_sesion, name="iniciar_sesion"),
+    path('cerrar_sesion/', LogoutView.as_view(next_page='home'), name='Cerrar_sesion'),
+    path('organizar_taller/', views.organizar_taller, name="organizar_taller"),
 ]
