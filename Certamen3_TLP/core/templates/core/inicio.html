@@ -1,5 +1,31 @@
-{%extends 'core/base.html'%}
+{% extends 'core/base.html' %}
 
-{% block contenido%}
-    <h1>Estos son los talleres que están activos en este momento:<h1>
-{% endblock%}
+{% block contenido %}
+<!-- FORMATO A SEGUIR PARA DESPLEGAR DATOS DE UNA VIEW
+    <h1>Estos son los talleres que están activos en este momento:</h1>
+    <ul>
+    {% for feriado in feriados %}
+        <li>
+            <strong>{{ feriado.title }}</strong> - {{ feriado.date }}
+            {% if feriado.inalienable %}
+                - Irrenunciable
+            {% else %}
+                - Renunciable
+            {% endif %}
+        </li>
+    {% empty %}
+        <li>No hay feriados disponibles.</li>
+    {% endfor %}
+    </ul>-->
+    <h2>Lista de Talleres</h2>
+    <ul>
+        {% for taller in talleres %}
+            <li>
+                <strong>{{ taller.nombre }}</strong> - {{ taller.fecha }}<br>
+                {{ taller.descripcion }}
+            </li>
+        {% empty %}
+            <li>No hay talleres registrados.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

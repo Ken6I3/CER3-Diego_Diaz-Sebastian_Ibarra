@@ -3,13 +3,36 @@ from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import ProponerTallerForm
+from .models import Taller
+import requests
+
+from rest_framework import viewsets
+from .serializers import TallerSerializer
+
 # Create your views here.
+
+class TallerSetVista(viewsets.ModelViewSet):
+    queryset = Taller.objects.all()
+    serializer_class = TallerSerializer
 
 def inicio(request):
     en_junta = False
+
+    url = "https://api.boostr.cl/holidays.json"
+
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        datos = response.json()
+        feriados = datos.get('data',[])
+    else:
+        feriados = []
+
+    talleres = Taller.objects.all()
+
     if request.user.is_authenticated:
         en_junta = request.user.groups.filter(name='Junta de vecinos').exists()
-    return render(request, 'core/inicio.html', {'en_junta': en_junta})
+    return render(request, 'core/inicio.html', {'en_junta': en_junta,'feriados':feriados, 'talleres':talleres})
 
 
 def iniciar_sesion(request):
