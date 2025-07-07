@@ -20,12 +20,11 @@
     <h2>Lista de Talleres</h2>
     <ul>
         {% for taller in talleres %}
-            <li>
-                <strong>{{ taller.nombre }}</strong> - {{ taller.fecha }}<br>
-                {{ taller.descripcion }}
-            </li>
-        {% empty %}
-            <li>No hay talleres registrados.</li>
+                <li>
+                    <strong>{{ taller.nombre }}</strong> - {{ taller.fecha }} - {{ taller.profesor }}
+                </li>
+                {% empty %}
+                No hay talleres activos
         {% endfor %}
     </ul>
 {% endblock %}

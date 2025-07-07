@@ -4,7 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import ProponerTallerForm
 from .models import Taller
-import requests
+from rest_framework.permissions import IsAdminUser
 
 from rest_framework import viewsets
 from .serializers import TallerSerializer
@@ -14,25 +14,18 @@ from .serializers import TallerSerializer
 class TallerSetVista(viewsets.ModelViewSet):
     queryset = Taller.objects.all()
     serializer_class = TallerSerializer
+    permission_classes = [IsAdminUser]
+    def get_queryset(self):
+        return Taller.objects.all().order_by("id")
 
 def inicio(request):
     en_junta = False
 
-    url = "https://api.boostr.cl/holidays.json"
-
-    response = requests.get(url)
-
-    if response.status_code == 200:
-        datos = response.json()
-        feriados = datos.get('data',[])
-    else:
-        feriados = []
-
-    talleres = Taller.objects.all()
+    talleres = Taller.objects.filter(estado__in=["Aceptado", "Pendiente"])
 
     if request.user.is_authenticated:
         en_junta = request.user.groups.filter(name='Junta de vecinos').exists()
-    return render(request, 'core/inicio.html', {'en_junta': en_junta,'feriados':feriados, 'talleres':talleres})
+    return render(request, 'core/inicio.html', {'en_junta': en_junta, 'talleres':talleres})
 
 
 def iniciar_sesion(request):
@@ -56,6 +49,10 @@ def iniciar_sesion(request):
 
 @login_required
 @user_passes_test(lambda u: u.groups.filter(name='Junta de vecinos').exists())
+
+
+
+
 def organizar_taller(request):
     if request.method == 'POST':
         form = ProponerTallerForm(request.POST)
