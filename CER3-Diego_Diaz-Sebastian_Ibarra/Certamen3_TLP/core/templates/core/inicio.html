@@ -1,0 +1,27 @@
+{% extends 'core/base.html' %}
+
+{% block contenido %}
+    <h2>Lista de Talleres</h2>
+    <ul>
+        {% for taller in talleres %}
+                <h3><strong>Taller de {{ taller.nombre }}</strong></h3>
+                <li>
+                    <h4>&#128197; Fecha: {{ taller.fecha }}</h4>
+                </li>
+                <li>
+                    <h4>&#128339; Duracion: {{ taller.duracion }} horas</h4>
+                </li>
+                <li>
+                    <h4>&#128100; Profesor: {{ taller.profesor }}</h4>
+                </li>
+                <li>
+                    <h4>&#128205; Lugar: {{ taller.lugar.nombre }}</h4>
+                </li>
+                <li>
+                    <h4>&#127991; Categoría: {{ taller.categoria.nombre }}</h4>
+                </li><br>
+                {% empty %}
+                No hay talleres activos
+        {% endfor %}
+    </ul>
+{% endblock %}
