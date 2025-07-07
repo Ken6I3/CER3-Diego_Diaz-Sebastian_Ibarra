@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import ProponerTallerForm
 from .models import Taller
 from rest_framework.permissions import IsAdminUser
-
+from django.core.paginator import Paginator
 from rest_framework import viewsets
 from .serializers import TallerSerializer
 
@@ -50,9 +50,6 @@ def iniciar_sesion(request):
 @login_required
 @user_passes_test(lambda u: u.groups.filter(name='Junta de vecinos').exists())
 
-
-
-
 def organizar_taller(request):
     if request.method == 'POST':
         form = ProponerTallerForm(request.POST)
@@ -67,4 +64,22 @@ def organizar_taller(request):
 
     return render(request, 'core/organizar_taller.html', {'form': form})
     
+@login_required
+@user_passes_test(lambda u: u.groups.filter(name='Junta de vecinos').exists())
+def historial_talleres(request):
+    talleres_qs = (
+        Taller.objects
+        .select_related("profesor", "lugar", "categoria")  # optimiza las consultas
+        .order_by("-fecha")                                # más reciente primero
+    )
 
+    # --- Paginación opcional (10 por página) ---
+    paginador = Paginator(talleres_qs, 10)
+    pagina    = request.GET.get("page")
+    talleres  = paginador.get_page(pagina)
+
+    return render(
+        request,
+        "core/historial.html",
+        {"talleres": talleres},
+    )

@@ -66,4 +66,4 @@ class Taller(models.Model):
         verbose_name_plural = "Talleres"
 
     def __str__(self):
-        return f"{self.nombre} - {self.get_categoria_display()} - {self.fecha:%d/%m/%Y} - {self.profesor}"
+        return f"{self.nombre} - {self.categoria.nombre} - {self.fecha:%d/%m/%Y} - {self.profesor}"

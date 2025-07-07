@@ -29,5 +29,6 @@ urlpatterns = [
     path('iniciar_sesion/', views.iniciar_sesion, name="iniciar_sesion"),
     path('cerrar_sesion/', LogoutView.as_view(next_page='home'), name='Cerrar_sesion'),
     path('organizar_taller/', views.organizar_taller, name="organizar_taller"),
+    path('historial_talleres/', views.historial_talleres, name="historial_talleres"),
     path("api/",include(router.urls)),
 ]
